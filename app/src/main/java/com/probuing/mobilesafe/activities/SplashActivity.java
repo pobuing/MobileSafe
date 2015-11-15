@@ -6,19 +6,26 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.probuing.mobilesafe.R;
 import com.probuing.mobilesafe.utils.StreamUtils;
 import com.probuing.mobilesafe.utils.UIUtils;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -54,13 +61,15 @@ public class SplashActivity extends Activity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             System.out.println("下载" + downloadurl);
+                            //下载apk方法
+                            downLoad(downloadurl);
                         }
                     });
                     builder.setNegativeButton("下次再说", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             msg.what = LOAD_MAINUI;
-                            handler.sendMessage(msg);
+                            loadMainUI();
                         }
                     });
                     builder.show();
@@ -68,6 +77,37 @@ public class SplashActivity extends Activity {
             }
         }
     };
+    private TextView tv_info;
+
+    private void downLoad(String downLoadUrl) {
+        HttpUtils utils = new HttpUtils();
+        utils.download(downLoadUrl, "/mnt/sdcard/temp.apk", new RequestCallBack<File>() {
+            @Override
+            public void onSuccess(ResponseInfo<File> responseInfo) {
+//                <action android:name="android.intent.action.VIEW" />
+//                <category android:name="android.intent.category.DEFAULT" />
+//                <data android:scheme="content" />
+//                <data android:scheme="file" />
+//                <data android:mimeType="application/vnd.android.package-archive" />
+                Intent intent = new Intent();
+                intent.setAction("android.intent.action.VIEW");
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "temp.apk")), "application/vnd.android.package-archive");
+                startActivityForResult(intent,0);
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                UIUtils.showToast(SplashActivity.this, "下载失败");
+                System.out.println("错误信息为" + s);
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isUploading) {
+                tv_info.setText(current + "/" + total);
+            }
+        });
+    }
 
     private void loadMainUI() {
         Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
@@ -80,6 +120,7 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         tv_splash_version = ((TextView) findViewById(R.id.tv_splash_version));
+        tv_info = ((TextView) findViewById(R.id.tv_splash_info));
         //创建包管理器
         packageManager = getPackageManager();
         try {
