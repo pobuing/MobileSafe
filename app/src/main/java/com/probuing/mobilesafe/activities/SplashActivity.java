@@ -2,6 +2,7 @@ package com.probuing.mobilesafe.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -72,6 +73,14 @@ public class SplashActivity extends Activity {
                             loadMainUI();
                         }
                     });
+                    //处理返回键
+                    builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            //点击返回键进入主界面
+                            loadMainUI();
+                        }
+                    });
                     builder.show();
                     break;
             }
@@ -107,6 +116,16 @@ public class SplashActivity extends Activity {
                 tv_info.setText(current + "/" + total);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==0)
+        {
+            //安装界面的执行
+            loadMainUI();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void loadMainUI() {
