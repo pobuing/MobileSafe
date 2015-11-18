@@ -20,4 +20,21 @@
     <style name="noTitleTheme" parent="Theme.AppCompat.Light.NoActionBar" />
     <style name="noTitleTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="noTitleTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <!-- 防盗设置界面的标题textview样式-->
+    <style name="textview_title">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:background">#5566ff00</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <!-- 防盗设置界面的内容textview样式-->
+    <style name="textview_content">
+        <item name="android:textColor">#bb000000</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">20sp</item>
+    </style>
 </resources>

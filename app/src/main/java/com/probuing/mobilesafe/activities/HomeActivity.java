@@ -1,5 +1,4 @@
 package com.probuing.mobilesafe.activities;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +24,6 @@ import com.probuing.mobilesafe.utils.UIUtils;
 public class HomeActivity extends Activity {
 
     private GridView gv_home;
-    private int gv_count = 9;
     //首页面的功能名
     private String[] names = {"手机防盗", "通讯卫士", "软件管家", "进程管理", "流量统计", "手机杀毒", "缓存清理", "高级工具", "设置中心"};
     //首页面的功能名
